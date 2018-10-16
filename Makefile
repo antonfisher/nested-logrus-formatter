@@ -1,7 +1,7 @@
 # nested-logrus-formatter
 
 .PHONY: all
-all: test
+all: test demo
 
 .PHONY: test
 test:
