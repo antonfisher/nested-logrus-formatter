@@ -9,7 +9,7 @@ type Formatter struct {
 	TimestampFormat string   // default: time.StampMilli = "Jan _2 15:04:05.000"
 	HideKeys        bool     // show [fieldValue] instead of [fieldKey:fieldValue]
 	NoColors        bool     // disable colors
-	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
+	ShowFullLevel   bool     // true to show full level [WARNING] instead of [WARN]
 	FieldsOrder     []string // default: fields sorted alphabetically
 }
 ```
