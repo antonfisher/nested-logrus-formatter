@@ -24,8 +24,8 @@ import (
 
 log := logrus.New()
 log.SetFormatter(&nested.Formatter{
-		HideKeys:    true,
-		FieldsOrder: []string{"component", "category"},
+	HideKeys:    true,
+	FieldsOrder: []string{"component", "category"},
 })
 
 log.Info("just info message")
