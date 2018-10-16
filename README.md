@@ -41,6 +41,6 @@ log.WithField("component", "rest").Warn("warn message")
 # run tests:
 make test
 
-# run tests:
+# run demo:
 make demo
 ```
