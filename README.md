@@ -1,5 +1,7 @@
 # nested-logrus-formatter
 
+[![Build Status](https://travis-ci.org/antonfisher/nested-logrus-formatter.svg?branch=master)](https://travis-ci.org/antonfisher/nested-logrus-formatter)
+
 ## Configuration:
 
 ```go
