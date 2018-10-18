@@ -3,6 +3,11 @@
 [![Build Status](https://travis-ci.org/antonfisher/nested-logrus-formatter.svg?branch=master)](https://travis-ci.org/antonfisher/nested-logrus-formatter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/antonfisher/nested-logrus-formatter)](https://goreportcard.com/report/github.com/antonfisher/nested-logrus-formatter)
 
+![Screenshot](https://raw.githubusercontent.com/antonfisher/nested-logrus-formatter/docs/images/nested-logrus-formatter-hide-keys.png)
+
+Default logrus formatter:
+![Screenshot](https://raw.githubusercontent.com/antonfisher/nested-logrus-formatter/docs/images/logrus-formatter-default.png)
+
 ## Configuration:
 
 ```go
