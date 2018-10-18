@@ -1,18 +1,30 @@
 package main
 
 import (
+	"fmt"
 	"github.com/antonfisher/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	l := logrus.New()
-
-	l.SetLevel(logrus.DebugLevel)
-	l.SetFormatter(&formatter.Formatter{
+	fmt.Print("\n--- nested-logrus-formatter ---\n\n")
+	printDemo(&formatter.Formatter{
 		HideKeys:    true,
 		FieldsOrder: []string{"component", "category", "req"},
 	})
+
+	fmt.Print("\n--- default logrus formatter ---\n\n")
+	printDemo(nil)
+}
+
+func printDemo(f logrus.Formatter) {
+	l := logrus.New()
+
+	l.SetLevel(logrus.DebugLevel)
+
+	if f != nil {
+		l.SetFormatter(f)
+	}
 
 	l.Info("this is nested-logrus-formatter demo")
 
@@ -31,5 +43,5 @@ func main() {
 	lDbConnector.Info("connecting to db on 10.10.10.13...")
 	lDbConnector.Warn("connection took 10s")
 
-	l.Fatal("demo end.")
+	l.Info("demo end.")
 }
