@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/antonfisher/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
 )
@@ -13,40 +11,25 @@ func main() {
 	l.SetLevel(logrus.DebugLevel)
 	l.SetFormatter(&formatter.Formatter{
 		HideKeys:    true,
-		FieldsOrder: []string{"component", "category"},
+		FieldsOrder: []string{"component", "category", "req"},
 	})
 
-	l.Debug("debug message")
-	l.Info("info message")
-	l.Warn("warn message")
-	l.Error("error message")
+	l.Info("this is nested-logrus-formatter demo")
 
-	ll := l.WithFields(logrus.Fields{
-		"component": "main",
+	lWebServer := l.WithField("component", "web-server")
+	lWebServer.Info("starting...")
+
+	lWebServerReq := lWebServer.WithFields(logrus.Fields{
+		"req":   "GET /api/stats",
+		"reqId": "#1",
 	})
 
-	ll.Debug("debug message")
-	ll.Info("info message")
-	ll.Warn("warn message")
-	ll.Error("error message")
+	lWebServerReq.Info("params: startYear=2048")
+	lWebServerReq.Error("response: 400 Bad Request")
 
-	lll := ll.WithFields(logrus.Fields{
-		"category": "rest",
-	})
+	lDbConnector := l.WithField("category", "db-connector")
+	lDbConnector.Info("connecting to db on 10.10.10.13...")
+	lDbConnector.Warn("connection took 10s")
 
-	lll.Debug("debug message")
-	lll.Info("info message")
-	lll.Warn("warn message")
-	lll.Error("error message")
-
-	llll := lll.WithFields(logrus.Fields{
-		"url": "/load/stats",
-	})
-
-	llll.Debug("debug message")
-	llll.Info("info message")
-	llll.Warn("warn message")
-	llll.Error("error message")
-	llll.Error(fmt.Errorf("error2"))
-	llll.Errorf("error %v", fmt.Errorf("error3"))
+	l.Fatal("demo end.")
 }
