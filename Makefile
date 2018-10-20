@@ -5,7 +5,7 @@ all: test demo
 
 .PHONY: test
 test:
-	go test ./tests/* -v -count 1 -v
+	go test ./tests/* -v -count 1
 
 cover:
 	go test ./tests/* -v -covermode=count -coverprofile=coverage.out
