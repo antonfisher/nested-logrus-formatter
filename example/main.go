@@ -11,13 +11,13 @@ func main() {
 	printDemo(&formatter.Formatter{
 		HideKeys:    true,
 		FieldsOrder: []string{"component", "category", "req"},
-	})
+	}, "nested-logrus-formatter")
 
 	fmt.Print("\n--- default logrus formatter ---\n\n")
-	printDemo(nil)
+	printDemo(nil, "default logrus formatter")
 }
 
-func printDemo(f logrus.Formatter) {
+func printDemo(f logrus.Formatter, title string) {
 	l := logrus.New()
 
 	l.SetLevel(logrus.DebugLevel)
@@ -26,7 +26,7 @@ func printDemo(f logrus.Formatter) {
 		l.SetFormatter(f)
 	}
 
-	l.Info("this is nested-logrus-formatter demo")
+	l.Infof("this is %v demo", title)
 
 	lWebServer := l.WithField("component", "web-server")
 	lWebServer.Info("starting...")

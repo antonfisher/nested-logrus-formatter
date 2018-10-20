@@ -12,11 +12,12 @@ import (
 
 // Formatter - logrus formatter, implements logrus.Formatter
 type Formatter struct {
+	FieldsOrder     []string // default: fields sorted alphabetically
 	TimestampFormat string   // default: time.StampMilli = "Jan _2 15:04:05.000"
 	HideKeys        bool     // show [fieldValue] instead of [fieldKey:fieldValue]
 	NoColors        bool     // disable colors
+	NoFieldsColors  bool     // color only level, default is level + fields
 	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
-	FieldsOrder     []string // default: fields sorted alphabetically
 }
 
 // Format an log entry
@@ -37,22 +38,20 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// write level
 	level := strings.ToUpper(entry.Level.String())
 
-	if f.NoColors {
-		b.WriteString(" [")
-	} else {
-		fmt.Fprintf(b, " \x1b[%dm[", levelColor)
+	if !f.NoColors {
+		fmt.Fprintf(b, "\x1b[%dm", levelColor)
 	}
 
+	b.WriteString(" [")
 	if f.ShowFullLevel {
 		b.WriteString(level)
 	} else {
 		b.WriteString(level[:4])
 	}
+	b.WriteString("] ")
 
-	if f.NoColors {
-		b.WriteString("] ")
-	} else {
-		b.WriteString("]\x1b[0m ")
+	if !f.NoColors && f.NoFieldsColors {
+		b.WriteString("\x1b[0m ")
 	}
 
 	// write fields
@@ -60,6 +59,10 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 		f.writeFields(b, entry)
 	} else {
 		f.writeOrderedFields(b, entry)
+	}
+
+	if !f.NoColors && !f.NoFieldsColors {
+		b.WriteString("\x1b[0m ")
 	}
 
 	// write message

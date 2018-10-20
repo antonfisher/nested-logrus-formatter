@@ -12,11 +12,12 @@ Default logrus formatter:
 
 ```go
 type Formatter struct {
+	FieldsOrder     []string // default: fields sorted alphabetically
 	TimestampFormat string   // default: time.StampMilli = "Jan _2 15:04:05.000"
 	HideKeys        bool     // show [fieldValue] instead of [fieldKey:fieldValue]
 	NoColors        bool     // disable colors
-	ShowFullLevel   bool     // true to show full level [WARNING] instead of [WARN]
-	FieldsOrder     []string // default: fields sorted alphabetically
+	NoFieldsColors  bool     // color only level, default is level + fields
+	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
 }
 ```
 
