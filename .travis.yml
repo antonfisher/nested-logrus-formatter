@@ -11,4 +11,6 @@ before_script:
 
 after_success:
   - make cover
-  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - echo $GOPATH
+  - echo $COVERALLS_TOKEN
+  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken "$COVERALLS_TOKEN"
