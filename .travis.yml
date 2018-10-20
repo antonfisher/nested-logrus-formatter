@@ -10,5 +10,5 @@ before_script:
   - go get -t github.com/sirupsen/logrus
 
 after_success:
-  - go test -v -covermode=count -coverprofile=coverage.out
+  - make cover
   - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
