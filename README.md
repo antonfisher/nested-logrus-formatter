@@ -11,12 +11,12 @@ Human-readable log formatter, converts _logrus_ fields to a nested structure:
 
 ```go
 type Formatter struct {
-	FieldsOrder     []string // default: fields sorted alphabetically
-	TimestampFormat string   // default: time.StampMilli = "Jan _2 15:04:05.000"
-	HideKeys        bool     // show [fieldValue] instead of [fieldKey:fieldValue]
-	NoColors        bool     // disable colors
-	NoFieldsColors  bool     // color only level, default is level + fields
-	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
+	FieldsOrder     []string // by default fields are sorted alphabetically
+	TimestampFormat string   // by default time.StampMilli = "Jan _2 15:04:05.000" is used
+	HideKeys        bool     // to show only [fieldValue] instead of [fieldKey:fieldValue]
+	NoColors        bool     // to disable all colors
+	NoFieldsColors  bool     // to disable colors only on fields and keep levels colored
+	ShowFullLevel   bool     // to show full level (e.g. [WARNING] instead of [WARN])
 }
 ```
 
