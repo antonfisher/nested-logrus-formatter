@@ -18,6 +18,7 @@ type Formatter struct {
 	NoColors        bool     // disable colors
 	NoFieldsColors  bool     // color only level, default is level + fields
 	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
+	TrimMessages    bool     // true to trim whitespace on messages
 }
 
 // Format an log entry
@@ -66,7 +67,11 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	// write message
-	b.WriteString(entry.Message)
+	if f.TrimMessages {
+		b.WriteString(strings.TrimSpace(entry.Message))
+	} else {
+		b.WriteString(entry.Message)
+	}
 	b.WriteByte('\n')
 
 	return b.Bytes(), nil
