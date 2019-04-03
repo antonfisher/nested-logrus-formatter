@@ -17,6 +17,7 @@ type Formatter struct {
 	NoColors        bool     // to disable all colors
 	NoFieldsColors  bool     // to disable colors only on fields and keep levels colored
 	ShowFullLevel   bool     // to show full level (e.g. [WARNING] instead of [WARN])
+	TrimMessages    bool     // to trim whitespace on messages
 }
 ```
 
