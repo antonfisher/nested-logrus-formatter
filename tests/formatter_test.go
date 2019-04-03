@@ -41,13 +41,13 @@ func ExampleFormatter_Format_full_level() {
 	l.Debug("test1")
 	l.Info("test2")
 	l.Warn("test3")
-	l.Error("test4")
+	l.Error("   test4")
 
 	// Output:
 	// - [DEBUG] test1
 	// - [INFO] test2
 	// - [WARNING] test3
-	// - [ERROR] test4
+	// - [ERROR]    test4
 }
 func ExampleFormatter_Format_show_keys() {
 	l := logrus.New()
@@ -134,4 +134,26 @@ func ExampleFormatter_Format_field_order() {
 	// - [INFO] test1
 	// - [INFO] [component:main] test2
 	// - [INFO] [component:main] [category:rest] test3
+}
+
+func ExampleFormatter_Format_trim_message() {
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		TrimMessages:    true,
+		NoColors:        true,
+		TimestampFormat: "-",
+	})
+
+	l.Debug(" test1 ")
+	l.Info("test2 ")
+	l.Warn(" test3")
+	l.Error("   test4   ")
+
+	// Output:
+	// - [DEBU] test1
+	// - [INFO] test2
+	// - [WARN] test3
+	// - [ERRO] test4
 }
