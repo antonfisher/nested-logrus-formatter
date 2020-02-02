@@ -180,9 +180,7 @@ func TestFormatter_Format_with_report_caller(t *testing.T) {
 		t.Errorf("Cannot read log output: %v", err)
 	}
 
-	expectedRegExp := "- \\[DEBU\\] test1 \\(.+/tests/formatter_test\\.go:[0-9]+ " +
-		"command-line-arguments_test\\.TestFormatter_Format_with_report_caller\\)\n$"
-
+	expectedRegExp := "- \\[DEBU\\] test1 \\(.+\\.go:[0-9]+ .+\\)\n$"
 	match, err := regexp.MatchString(
 		expectedRegExp,
 		line,
