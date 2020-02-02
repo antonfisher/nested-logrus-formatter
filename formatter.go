@@ -72,6 +72,17 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b.WriteString(entry.Message)
 	}
+
+	if entry.HasCaller() {
+		fmt.Fprintf(
+			b,
+			" (%s:%d %s)",
+			entry.Caller.File,
+			entry.Caller.Line,
+			entry.Caller.Function,
+		)
+	}
+
 	b.WriteByte('\n')
 
 	return b.Bytes(), nil

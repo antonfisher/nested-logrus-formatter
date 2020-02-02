@@ -1,7 +1,10 @@
 package formatter_test
 
 import (
+	"bytes"
 	"os"
+	"regexp"
+	"testing"
 
 	formatter "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
@@ -156,4 +159,41 @@ func ExampleFormatter_Format_trim_message() {
 	// - [INFO] test2
 	// - [WARN] test3
 	// - [ERRO] test4
+}
+
+func TestFormatter_Format_with_report_caller(t *testing.T) {
+	output := bytes.NewBuffer([]byte{})
+
+	l := logrus.New()
+	l.SetOutput(output)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:        true,
+		TimestampFormat: "-",
+	})
+	l.SetReportCaller(true)
+
+	l.Debug("test1")
+
+	line, err := output.ReadString('\n')
+	if err != nil {
+		t.Errorf("Cannot read log output: %v", err)
+	}
+
+	expectedRegExp := "- \\[DEBU\\] test1 \\(.+/tests/formatter_test\\.go:[0-9]+ " +
+		"command-line-arguments_test\\.TestFormatter_Format_with_report_caller\\)\n$"
+
+	match, err := regexp.MatchString(
+		expectedRegExp,
+		line,
+	)
+	if err != nil {
+		t.Errorf("Cannot check regexp: %v", err)
+	} else if !match {
+		t.Errorf(
+			"logger.SetReportCaller(true) output doesn't match, expected: %s to find in: '%s'",
+			expectedRegExp,
+			line,
+		)
+	}
 }

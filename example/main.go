@@ -26,6 +26,9 @@ func printDemo(f logrus.Formatter, title string) {
 		l.SetFormatter(f)
 	}
 
+	// enable/disable file/function name
+	l.SetReportCaller(false)
+
 	l.Infof("this is %v demo", title)
 
 	lWebServer := l.WithField("component", "web-server")
