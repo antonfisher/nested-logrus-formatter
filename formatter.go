@@ -3,6 +3,7 @@ package formatter
 import (
 	"bytes"
 	"fmt"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -12,13 +13,15 @@ import (
 
 // Formatter - logrus formatter, implements logrus.Formatter
 type Formatter struct {
-	FieldsOrder     []string // default: fields sorted alphabetically
-	TimestampFormat string   // default: time.StampMilli = "Jan _2 15:04:05.000"
-	HideKeys        bool     // show [fieldValue] instead of [fieldKey:fieldValue]
-	NoColors        bool     // disable colors
-	NoFieldsColors  bool     // color only level, default is level + fields
-	ShowFullLevel   bool     // true to show full level [WARNING] instead [WARN]
-	TrimMessages    bool     // true to trim whitespace on messages
+	FieldsOrder            []string // default: fields sorted alphabetically
+	TimestampFormat        string   // default: time.StampMilli = "Jan _2 15:04:05.000"
+	HideKeys               bool     // show [fieldValue] instead of [fieldKey:fieldValue]
+	NoColors               bool     // disable colors
+	NoFieldsColors         bool     // color only level, default is level + fields
+	ShowFullLevel          bool     // true to show full level [WARNING] instead [WARN]
+	TrimMessages           bool     // true to trim whitespace on messages
+	CallerFirst            bool     // true for caller info printed first
+	CustomCallerPrettyfier func(*runtime.Frame) string // set to modify the function and file key
 }
 
 // Format an log entry
@@ -38,6 +41,10 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	// write level
 	level := strings.ToUpper(entry.Level.String())
+
+	if f.CallerFirst {
+		f.writeCaller(b, entry)
+	}
 
 	if !f.NoColors {
 		fmt.Fprintf(b, "\x1b[%dm", levelColor)
@@ -73,19 +80,31 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 		b.WriteString(entry.Message)
 	}
 
-	if entry.HasCaller() {
-		fmt.Fprintf(
-			b,
-			" (%s:%d %s)",
-			entry.Caller.File,
-			entry.Caller.Line,
-			entry.Caller.Function,
-		)
+	if !f.CallerFirst {
+		f.writeCaller(b, entry)
 	}
 
 	b.WriteByte('\n')
 
 	return b.Bytes(), nil
+}
+
+func (f *Formatter) writeCaller(b *bytes.Buffer, entry *logrus.Entry) {
+
+	if entry.HasCaller() {
+		if f.CustomCallerPrettyfier != nil {
+			fmt.Fprintf(b, f.CustomCallerPrettyfier(entry.Caller))
+		} else {
+			fmt.Fprintf(
+				b,
+				" (%s:%d %s)",
+				entry.Caller.File,
+				entry.Caller.Line,
+				entry.Caller.Function,
+			)
+		}
+	}
+
 }
 
 func (f *Formatter) writeFields(b *bytes.Buffer, entry *logrus.Entry) {
