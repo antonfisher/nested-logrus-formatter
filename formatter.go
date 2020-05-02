@@ -13,15 +13,32 @@ import (
 
 // Formatter - logrus formatter, implements logrus.Formatter
 type Formatter struct {
-	FieldsOrder            []string // default: fields sorted alphabetically
-	TimestampFormat        string   // default: time.StampMilli = "Jan _2 15:04:05.000"
-	HideKeys               bool     // show [fieldValue] instead of [fieldKey:fieldValue]
-	NoColors               bool     // disable colors
-	NoFieldsColors         bool     // color only level, default is level + fields
-	ShowFullLevel          bool     // true to show full level [WARNING] instead [WARN]
-	TrimMessages           bool     // true to trim whitespace on messages
-	CallerFirst            bool     // true for caller info printed first
-	CustomCallerPrettyfier func(*runtime.Frame) string // set to modify the function and file key
+	// FieldsOrder - default: fields sorted alphabetically
+	FieldsOrder []string
+
+	// TimestampFormat - default: time.StampMilli = "Jan _2 15:04:05.000"
+	TimestampFormat string
+
+	// HideKeys - show [fieldValue] instead of [fieldKey:fieldValue]
+	HideKeys bool
+
+	// NoColors - disable colors
+	NoColors bool
+
+	// NoFieldsColors - apply colors only to the level, default is level + fields
+	NoFieldsColors bool
+
+	// ShowFullLevel - show a full level [WARNING] instead of [WARN]
+	ShowFullLevel bool
+
+	// TrimMessages - trim whitespaces on messages
+	TrimMessages bool
+
+	// CallerFirst - print caller info first
+	CallerFirst bool
+
+	// CustomCallerPrettyfier - set custom formatter for caller info
+	CustomCallerPrettyfier func(*runtime.Frame) string
 }
 
 // Format an log entry
@@ -90,7 +107,6 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 }
 
 func (f *Formatter) writeCaller(b *bytes.Buffer, entry *logrus.Entry) {
-
 	if entry.HasCaller() {
 		if f.CustomCallerPrettyfier != nil {
 			fmt.Fprintf(b, f.CustomCallerPrettyfier(entry.Caller))
@@ -104,7 +120,6 @@ func (f *Formatter) writeCaller(b *bytes.Buffer, entry *logrus.Entry) {
 			)
 		}
 	}
-
 }
 
 func (f *Formatter) writeFields(b *bytes.Buffer, entry *logrus.Entry) {
