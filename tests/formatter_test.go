@@ -2,6 +2,7 @@ package formatter_test
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path"
 	"regexp"
@@ -208,7 +209,7 @@ func TestFormatter_Format_with_report_caller_and_CallerFirst_true(t *testing.T) 
 	l.SetFormatter(&formatter.Formatter{
 		NoColors:        true,
 		TimestampFormat: "-",
-		CallerFirst: true,
+		CallerFirst:     true,
 	})
 	l.SetReportCaller(true)
 
@@ -219,13 +220,12 @@ func TestFormatter_Format_with_report_caller_and_CallerFirst_true(t *testing.T) 
 		t.Errorf("Cannot read log output: %v", err)
 	}
 
-	//expectedRegExp := "- \\[DEBU\\] test1 \\(.+\\.go:[0-9]+ .+\\)\n$"
 	expectedRegExp := "- \\(.+\\.go:[0-9]+ .+\\) \\[DEBU\\] test1\n$"
 	match, err := regexp.MatchString(
 		expectedRegExp,
 		line,
 	)
-	t.Log(line)
+
 	if err != nil {
 		t.Errorf("Cannot check regexp: %v", err)
 	} else if !match {
@@ -246,7 +246,7 @@ func TestFormatter_Format_with_report_caller_and_CustomCallerPrettyfier(t *testi
 	l.SetFormatter(&formatter.Formatter{
 		NoColors:        true,
 		TimestampFormat: "-",
-		CallerFirst: true,
+		CallerFirst:     true,
 		CustomCallerPrettyfier: func(f *runtime.Frame) string {
 			s := strings.Split(f.Function, ".")
 			funcName := s[len(s)-1]
@@ -262,7 +262,6 @@ func TestFormatter_Format_with_report_caller_and_CustomCallerPrettyfier(t *testi
 		t.Errorf("Cannot read log output: %v", err)
 	}
 
-	//expectedRegExp := "- \\[DEBU\\] test1 \\(.+\\.go:[0-9]+ .+\\)\n$"
 	expectedRegExp := "- \\[.+\\.go:[0-9]+\\]\\[.+\\(\\)\\] \\[DEBU\\] test1\n$"
 	match, err := regexp.MatchString(
 		expectedRegExp,
