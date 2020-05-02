@@ -13,3 +13,4 @@
 
 # IDE
 *.code-workspace
+.idea/
