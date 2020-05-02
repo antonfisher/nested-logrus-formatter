@@ -237,7 +237,7 @@ func TestFormatter_Format_with_report_caller_and_CallerFirst_true(t *testing.T) 
 	}
 }
 
-func TestFormatter_Format_with_report_caller_and_CustomCallerPrettyfier(t *testing.T) {
+func TestFormatter_Format_with_report_caller_and_CustomCallerFormatter(t *testing.T) {
 	output := bytes.NewBuffer([]byte{})
 
 	l := logrus.New()
@@ -247,7 +247,7 @@ func TestFormatter_Format_with_report_caller_and_CustomCallerPrettyfier(t *testi
 		NoColors:        true,
 		TimestampFormat: "-",
 		CallerFirst:     true,
-		CustomCallerPrettyfier: func(f *runtime.Frame) string {
+		CustomCallerFormatter: func(f *runtime.Frame) string {
 			s := strings.Split(f.Function, ".")
 			funcName := s[len(s)-1]
 			return fmt.Sprintf(" [%s:%d][%s()]", path.Base(f.File), f.Line, funcName)

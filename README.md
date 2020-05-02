@@ -36,8 +36,8 @@ type Formatter struct {
 	// CallerFirst - print caller info first
 	CallerFirst bool
 
-	// CustomCallerPrettyfier - set custom formatter for caller info
-	CustomCallerPrettyfier func(*runtime.Frame) string
+	// CustomCallerFormatter - set custom formatter for caller info
+	CustomCallerFormatter func(*runtime.Frame) string
 }
 ```
 

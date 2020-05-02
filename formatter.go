@@ -37,8 +37,8 @@ type Formatter struct {
 	// CallerFirst - print caller info first
 	CallerFirst bool
 
-	// CustomCallerPrettyfier - set custom formatter for caller info
-	CustomCallerPrettyfier func(*runtime.Frame) string
+	// CustomCallerFormatter - set custom formatter for caller info
+	CustomCallerFormatter func(*runtime.Frame) string
 }
 
 // Format an log entry
@@ -108,8 +108,8 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 func (f *Formatter) writeCaller(b *bytes.Buffer, entry *logrus.Entry) {
 	if entry.HasCaller() {
-		if f.CustomCallerPrettyfier != nil {
-			fmt.Fprintf(b, f.CustomCallerPrettyfier(entry.Caller))
+		if f.CustomCallerFormatter != nil {
+			fmt.Fprintf(b, f.CustomCallerFormatter(entry.Caller))
 		} else {
 			fmt.Fprintf(
 				b,
