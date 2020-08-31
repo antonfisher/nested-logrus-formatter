@@ -143,6 +143,31 @@ func ExampleFormatter_Format_field_order() {
 	// - [INFO] [component:main] [category:rest] test3
 }
 
+func ExampleFormatter_Format_no_fields_space() {
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:        true,
+		TimestampFormat: "-",
+		FieldsOrder:     []string{"component", "category"},
+		HideKeys:        false,
+		NoFieldsSpace:   true,
+	})
+
+	ll := l.WithField("component", "main")
+	lll := ll.WithField("category", "rest")
+
+	l.Info("test1")
+	ll.Info("test2")
+	lll.Info("test3")
+
+	// Output:
+	// - [INFO] test1
+	// - [INFO][component:main] test2
+	// - [INFO][component:main][category:rest] test3
+}
+
 func ExampleFormatter_Format_trim_message() {
 	l := logrus.New()
 	l.SetOutput(os.Stdout)
