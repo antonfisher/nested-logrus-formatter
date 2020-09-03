@@ -27,6 +27,9 @@ type Formatter struct {
 	// NoFieldsColors - apply colors only to the level, default is level + fields
 	NoFieldsColors bool
 
+	// NoFieldsSpace - no space between fields
+	NoFieldsSpace bool
+
 	// ShowFullLevel - show a full level [WARNING] instead of [WARN]
 	ShowFullLevel bool
 

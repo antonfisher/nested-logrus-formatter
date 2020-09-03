@@ -28,6 +28,9 @@ type Formatter struct {
 	// NoFieldsColors - apply colors only to the level, default is level + fields
 	NoFieldsColors bool
 
+	// NoFieldsSpace - no space between fields
+	NoFieldsSpace bool
+
 	// ShowFullLevel - show a full level [WARNING] instead of [WARN]
 	ShowFullLevel bool
 
@@ -73,7 +76,11 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b.WriteString(level[:4])
 	}
-	b.WriteString("] ")
+	b.WriteString("]")
+
+	if !f.NoFieldsSpace {
+		b.WriteString(" ")
+	}
 
 	if !f.NoColors && f.NoFieldsColors {
 		b.WriteString("\x1b[0m")
@@ -84,6 +91,10 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 		f.writeFields(b, entry)
 	} else {
 		f.writeOrderedFields(b, entry)
+	}
+
+	if f.NoFieldsSpace {
+		b.WriteString(" ")
 	}
 
 	if !f.NoColors && !f.NoFieldsColors {
@@ -166,9 +177,13 @@ func (f *Formatter) writeOrderedFields(b *bytes.Buffer, entry *logrus.Entry) {
 
 func (f *Formatter) writeField(b *bytes.Buffer, entry *logrus.Entry, field string) {
 	if f.HideKeys {
-		fmt.Fprintf(b, "[%v] ", entry.Data[field])
+		fmt.Fprintf(b, "[%v]", entry.Data[field])
 	} else {
-		fmt.Fprintf(b, "[%s:%v] ", field, entry.Data[field])
+		fmt.Fprintf(b, "[%s:%v]", field, entry.Data[field])
+	}
+
+	if !f.NoFieldsSpace {
+		b.WriteString(" ")
 	}
 }
 
