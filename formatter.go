@@ -34,6 +34,9 @@ type Formatter struct {
 	// ShowFullLevel - show a full level [WARNING] instead of [WARN]
 	ShowFullLevel bool
 
+	// NoUppercaseLevel - no upper case for level value
+	NoUppercaseLevel bool
+
 	// TrimMessages - trim whitespaces on messages
 	TrimMessages bool
 
@@ -60,7 +63,12 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	b.WriteString(entry.Time.Format(timestampFormat))
 
 	// write level
-	level := strings.ToUpper(entry.Level.String())
+	var level string
+	if f.NoUppercaseLevel {
+		level = entry.Level.String()
+	} else {
+		level = strings.ToUpper(entry.Level.String())
+	}
 
 	if f.CallerFirst {
 		f.writeCaller(b, entry)

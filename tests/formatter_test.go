@@ -168,6 +168,33 @@ func ExampleFormatter_Format_no_fields_space() {
 	// - [INFO][component:main][category:rest] test3
 }
 
+func ExampleFormatter_Format_no_uppercase_level() {
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:         true,
+		TimestampFormat:  "-",
+		FieldsOrder:      []string{"component", "category"},
+		NoUppercaseLevel: true,
+	})
+
+	ll := l.WithField("component", "main")
+	lll := ll.WithField("category", "rest")
+	llll := ll.WithField("category", "other")
+
+	l.Debug("test1")
+	ll.Info("test2")
+	lll.Warn("test3")
+	llll.Error("test4")
+
+	// Output:
+	// - [debu] test1
+	// - [info] [component:main] test2
+	// - [warn] [component:main] [category:rest] test3
+	// - [erro] [component:main] [category:other] test4
+}
+
 func ExampleFormatter_Format_trim_message() {
 	l := logrus.New()
 	l.SetOutput(os.Stdout)

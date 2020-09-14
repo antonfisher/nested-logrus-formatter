@@ -33,6 +33,9 @@ type Formatter struct {
 	// ShowFullLevel - show a full level [WARNING] instead of [WARN]
 	ShowFullLevel bool
 
+	// NoUppercaseLevel - no upper case for level value
+	NoUppercaseLevel bool
+
 	// TrimMessages - trim whitespaces on messages
 	TrimMessages bool
 
