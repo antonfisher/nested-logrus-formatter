@@ -204,7 +204,7 @@ const (
 
 func getColorByLevel(level logrus.Level) int {
 	switch level {
-	case logrus.DebugLevel:
+	case logrus.DebugLevel, logrus.TraceLevel:
 		return colorGray
 	case logrus.WarnLevel:
 		return colorYellow
