@@ -13,6 +13,9 @@ import (
 
 // Formatter - logrus formatter, implements logrus.Formatter
 type Formatter struct {
+	// SkipFields - default: no fields
+	SkipFields []string
+
 	// FieldsOrder - default: fields sorted alphabetically
 	FieldsOrder []string
 
@@ -184,6 +187,12 @@ func (f *Formatter) writeOrderedFields(b *bytes.Buffer, entry *logrus.Entry) {
 }
 
 func (f *Formatter) writeField(b *bytes.Buffer, entry *logrus.Entry, field string) {
+	for _, fieldToSkip := range f.SkipFields {
+		if field == fieldToSkip {
+			return
+		}
+	}
+
 	if f.HideKeys {
 		fmt.Fprintf(b, "[%v]", entry.Data[field])
 	} else {
