@@ -39,6 +39,9 @@ type Formatter struct {
 	// TrimMessages - trim whitespaces on messages
 	TrimMessages bool
 
+	// MetaPerLine - write metadata and fields for each line of the message
+	MetaPerLine bool
+
 	// CallerFirst - print caller info first
 	CallerFirst bool
 

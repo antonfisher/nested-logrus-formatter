@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	formatter "github.com/antonfisher/nested-logrus-formatter"
+	formatter "github.com/d-uzlov/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -217,6 +217,28 @@ func ExampleFormatter_Format_trim_message() {
 	// - [ERRO] test4
 }
 
+func ExampleFormatter_Format_multiline() {
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:        true,
+		TimestampFormat: "-",
+		MetaPerLine:     true,
+	})
+
+	ll := l.WithField("test", "field")
+
+	ll.Info(`line 1
+line 2
+line 3`)
+
+	// Output:
+	// - [INFO] [test:field] line 1
+	// - [INFO] [test:field] line 2
+	// - [INFO] [test:field] line 3
+}
+
 func TestFormatter_Format_with_report_caller(t *testing.T) {
 	output := bytes.NewBuffer([]byte{})
 
@@ -327,5 +349,45 @@ func TestFormatter_Format_with_report_caller_and_CustomCallerFormatter(t *testin
 			expectedRegExp,
 			line,
 		)
+	}
+}
+
+func TestFormatter_Format_multiline_with_report_caller(t *testing.T) {
+	output := bytes.NewBuffer([]byte{})
+
+	l := logrus.New()
+	l.SetOutput(output)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:        true,
+		TimestampFormat: "-",
+		MetaPerLine:     true,
+	})
+	l.SetReportCaller(true)
+
+	l.Debug(`line 1
+line 2
+line 3`)
+
+	for i := 0; i < 3; i++ {
+		line, err := output.ReadString('\n')
+		if err != nil {
+			t.Errorf("Cannot read log output: %v", err)
+		}
+
+		expectedRegExp := "- \\[DEBU\\] line \\d \\(.+\\.go:[0-9]+ .+\\)\n$"
+		match, err := regexp.MatchString(
+			expectedRegExp,
+			line,
+		)
+		if err != nil {
+			t.Errorf("Cannot check regexp: %v", err)
+		} else if !match {
+			t.Errorf(
+				"logger.SetReportCaller(true) output doesn't match, expected: %s to find in: '%s'",
+				expectedRegExp,
+				line,
+			)
+		}
 	}
 }

@@ -40,6 +40,9 @@ type Formatter struct {
 	// TrimMessages - trim whitespaces on messages
 	TrimMessages bool
 
+	// MetaPerLine - write metadata and fields for each line of the message
+	MetaPerLine bool
+
 	// CallerFirst - print caller info first
 	CallerFirst bool
 
@@ -109,20 +112,38 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 		b.WriteString("\x1b[0m")
 	}
 
-	// write message
-	if f.TrimMessages {
-		b.WriteString(strings.TrimSpace(entry.Message))
+	if f.MetaPerLine {
+		prefix := b.Bytes()
+		b = &bytes.Buffer{}
+		for _, line := range strings.Split(entry.Message, "\n") {
+			b.Write(prefix)
+
+			f.writeMessage(b, line)
+
+			if !f.CallerFirst {
+				f.writeCaller(b, entry)
+			}
+
+			b.WriteByte('\n')
+		}
 	} else {
-		b.WriteString(entry.Message)
-	}
+		f.writeMessage(b, entry.Message)
 
-	if !f.CallerFirst {
-		f.writeCaller(b, entry)
-	}
+		if !f.CallerFirst {
+			f.writeCaller(b, entry)
+		}
 
-	b.WriteByte('\n')
+		b.WriteByte('\n')
+	}
 
 	return b.Bytes(), nil
+}
+
+func (f *Formatter) writeMessage(b *bytes.Buffer, message string) {
+	if f.TrimMessages {
+		message = strings.TrimSpace(message)
+	}
+	b.WriteString(message)
 }
 
 func (f *Formatter) writeCaller(b *bytes.Buffer, entry *logrus.Entry) {
