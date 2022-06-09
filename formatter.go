@@ -25,6 +25,9 @@ type Formatter struct {
 	// NoColors - disable colors
 	NoColors bool
 
+	// ColorTimestamp - enables log level colors for timestamp
+	ColorTimestamp bool
+
 	// NoFieldsColors - apply colors only to the level, default is level + fields
 	NoFieldsColors bool
 
@@ -59,8 +62,16 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// output buffer
 	b := &bytes.Buffer{}
 
+	if f.ColorTimestamp {
+		fmt.Fprintf(b, "\x1b[%dm", levelColor)
+	}
+
 	// write time
 	b.WriteString(entry.Time.Format(timestampFormat))
+
+	if f.ColorTimestamp {
+		b.WriteString("\x1b[0m")
+	}
 
 	// write level
 	var level string
