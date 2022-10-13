@@ -56,6 +56,7 @@ func ExampleFormatter_Format_full_level() {
 	// - [WARNING] test3
 	// - [ERROR]    test4
 }
+
 func ExampleFormatter_Format_show_keys() {
 	l := logrus.New()
 	l.SetOutput(os.Stdout)
@@ -94,6 +95,33 @@ func ExampleFormatter_Format_hide_keys() {
 	// Output:
 	// - [INFO] test1
 	// - [INFO] [rest] test2
+}
+
+func ExampleFormatter_Format_hide_partial_keys() {
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
+	l.SetLevel(logrus.DebugLevel)
+	l.SetFormatter(&formatter.Formatter{
+		NoColors:        true,
+		TimestampFormat: "-",
+		FieldsOrder:     []string{"component", "category"},
+		HideKeys:        false,
+		HidePartialKeys: map[string]bool{
+			"component": true,
+		},
+	})
+
+	ll := l.WithField("component", "main")
+	lll := ll.WithField("category", "rest")
+
+	l.Info("test1")
+	ll.Info("test2")
+	lll.Info("test3")
+
+	// Output:
+	// - [INFO] test1
+	// - [INFO] [main] test2
+	// - [INFO] [main] [category:rest] test3
 }
 
 func ExampleFormatter_Format_sort_order() {

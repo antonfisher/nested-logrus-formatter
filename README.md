@@ -21,6 +21,10 @@ type Formatter struct {
 	// HideKeys - show [fieldValue] instead of [fieldKey:fieldValue]
 	HideKeys bool
 
+	// HidePartialKeys - show [fieldValue] instead of [fieldKey:fieldValue] if fieldKey in the map
+	// HidePartialKeys will have a lower priority than HideKeys.
+	HidePartialKeys map[string]bool
+
 	// NoColors - disable colors
 	NoColors bool
 

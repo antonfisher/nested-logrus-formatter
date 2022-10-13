@@ -22,6 +22,10 @@ type Formatter struct {
 	// HideKeys - show [fieldValue] instead of [fieldKey:fieldValue]
 	HideKeys bool
 
+	// HidePartialKeys - show [fieldValue] instead of [fieldKey:fieldValue] if fieldKey in the map
+	// HidePartialKeys will have a lower priority than HideKeys.
+	HidePartialKeys map[string]bool
+
 	// NoColors - disable colors
 	NoColors bool
 
@@ -184,7 +188,7 @@ func (f *Formatter) writeOrderedFields(b *bytes.Buffer, entry *logrus.Entry) {
 }
 
 func (f *Formatter) writeField(b *bytes.Buffer, entry *logrus.Entry, field string) {
-	if f.HideKeys {
+	if f.HideKeys || (f.HidePartialKeys != nil && f.HidePartialKeys[field]) {
 		fmt.Fprintf(b, "[%v]", entry.Data[field])
 	} else {
 		fmt.Fprintf(b, "[%s:%v]", field, entry.Data[field])
